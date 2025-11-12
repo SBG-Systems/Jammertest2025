@@ -27,7 +27,7 @@ class InsRestApiClient:
             try:
                 ins_data['gnss2_measurement'] = self._get_json("gnss2")
             except requests.RequestException as exc:
-                ins_data['gnss1_measurement'] = None
+                ins_data['gnss2_measurement'] = None
             
             try:
                 ins_data['datalogger'] = self._get_json("dataLogger")
