@@ -107,6 +107,7 @@ class INSMonitor {
             this.updateElement(`datalogger-status-${insId}`, "--");
             this.updateElement(`datalogger-mode-${insId}`, "--");
             this.updateElement(`datalogger-space-${insId}`, "--");
+            this.updateDataLoggerControls(insId, null);
             return;
         }
 
@@ -123,6 +124,20 @@ class INSMonitor {
 
         const spaceRatio = (100. * dataLogger.usedSpace / dataLogger.totalSpace).toFixed(2);
         this.updateElement(`datalogger-space-${insId}`, `${this.formatBytes(dataLogger.usedSpace)} / ${this.formatBytes(dataLogger.totalSpace)} (${spaceRatio} %)`);
+
+        this.updateDataLoggerControls(insId, dataLogger.status);
+    }
+
+    updateDataLoggerControls(insId, status) {
+        const startButton = document.getElementById(`datalogger-start-${insId}`);
+        if (startButton) {
+            startButton.disabled = (status === 'logging' || status === null);
+        }
+
+        const stopButton = document.getElementById(`datalogger-stop-${insId}`);
+        if (stopButton) {
+            stopButton.disabled = (status !== 'logging');
+        }
     }
 
     updateGNSSMeasurements(insId, gnssId, gnssMeasurements) {
@@ -315,6 +330,36 @@ class INSMonitor {
         } catch (error) {
             console.error(`Error on rebooting ${insId}:`, error);
             alert(`Failed to reboot ${insName}: ${error.message}`);
+        }
+    }
+
+    async startDataLogger(insId, insName) {
+        try {
+            const response = await fetch(`/api/dataLogger/start/${insId}`, { method: 'POST' });
+            const result = await response.json();
+            if (!response.ok || !result.success) {
+                throw new Error(result.error || `HTTP ${response.status}`);
+            }
+        } catch (error) {
+            console.error(`Error on starting data logger for ${insId}:`, error);
+            alert(`Failed to start data logger on ${insName}: ${error.message}`);
+        }
+    }
+
+    async stopDataLogger(insId, insName) {
+        if (!confirm(`Stop data logger on ${insName} now ?`)) {
+            return;
+        }
+
+        try {
+            const response = await fetch(`/api/dataLogger/stop/${insId}`, { method: 'POST' });
+            const result = await response.json();
+            if (!response.ok || !result.success) {
+                throw new Error(result.error || `HTTP ${response.status}`);
+            }
+        } catch (error) {
+            console.error(`Error on stopping data logger for ${insId}:`, error);
+            alert(`Failed to stop data logger on ${insName}: ${error.message}`);
         }
     }
 

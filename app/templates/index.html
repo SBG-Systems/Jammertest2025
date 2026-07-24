@@ -70,6 +70,12 @@
                             <span class="status-info-label">Space:</span>
                             <span class="status-info-value" id="datalogger-space-{{ config.id }}">--</span>
                         </div>
+                        {% if config.connection_type == 'ethernet' %}
+                        <div class="datalogger-controls">
+                            <button class="datalogger-button" id="datalogger-start-{{ config.id }}" onclick="insMonitor.startDataLogger('{{ config.id }}', '{{ config.name }}')">▶ Start</button>
+                            <button class="datalogger-button" id="datalogger-stop-{{ config.id }}" onclick="insMonitor.stopDataLogger('{{ config.id }}', '{{ config.name }}')">⏹ Stop</button>
+                        </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>

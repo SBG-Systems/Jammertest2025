@@ -37,9 +37,13 @@ class InsRestApiClient:
         return ins_data
 
     def reboot(self) -> None:
-        url = self._build_url("system/reboot")
-        response = requests.post(url, headers=self._DEFAULT_HEADERS, timeout=self._REQUEST_TIMEOUT_SECONDS)
-        response.raise_for_status()
+        self._post("system/reboot")
+
+    def start_data_logger(self) -> None:
+        self._post("dataLogger/start")
+
+    def stop_data_logger(self) -> None:
+        self._post("dataLogger/stop")
 
     def _build_url(self, path: str) -> str:
         return f"{self._base_url}{self._API_PREFIX}/{path}"
@@ -47,5 +51,25 @@ class InsRestApiClient:
     def _get_json(self, path: str) -> Dict[str, Any]:
         url = self._build_url(path)
         response = requests.get(url, headers=self._DEFAULT_HEADERS, timeout=self._REQUEST_TIMEOUT_SECONDS)
-        response.raise_for_status()
+        self._raise_for_status(response)
         return response.json()
+
+    def _post(self, path: str) -> None:
+        url = self._build_url(path)
+        response = requests.post(url, headers=self._DEFAULT_HEADERS, json={}, timeout=self._REQUEST_TIMEOUT_SECONDS)
+        self._raise_for_status(response)
+
+    def _raise_for_status(self, response: requests.Response) -> None:
+        if response.ok:
+            return
+
+        try:
+            problem = response.json()
+        except ValueError:
+            problem = None
+
+        if isinstance(problem, dict) and ('title' in problem or 'detail' in problem):
+            message = f"{response.status_code} {problem.get('title', '')}: {problem.get('detail', '')}".strip()
+            raise requests.HTTPError(message, response=response)
+
+        response.raise_for_status()

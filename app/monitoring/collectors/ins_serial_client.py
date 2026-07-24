@@ -51,6 +51,12 @@ class InsSerialClient:
     def reboot(self) -> None:
         raise NotImplementedError("Reboot is not supported over a serial connection")
 
+    def start_data_logger(self) -> None:
+        raise NotImplementedError("Data logger control is not supported over a serial connection")
+
+    def stop_data_logger(self) -> None:
+        raise NotImplementedError("Data logger control is not supported over a serial connection")
+
     def _run(self):
         while self._running:
             handle = None

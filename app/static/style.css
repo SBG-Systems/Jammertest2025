@@ -63,6 +63,32 @@ body {
     border-color: #f5c6cb;
 }
 
+.datalogger-controls {
+    display: flex;
+    gap: 6px;
+    margin-top: 6px;
+}
+
+.datalogger-button {
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    padding: 3px 8px;
+    font-size: 0.7rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.datalogger-button:hover:not(:disabled) {
+    background: #f8f9fa;
+    border-color: #adb5bd;
+}
+
+.datalogger-button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
 .ins-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(650px, 1fr));

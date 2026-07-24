@@ -15,3 +15,9 @@ class FakeIns:
 
     def reboot(self) -> None:
         pass
+
+    def start_data_logger(self) -> None:
+        pass
+
+    def stop_data_logger(self) -> None:
+        pass

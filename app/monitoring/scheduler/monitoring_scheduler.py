@@ -52,11 +52,7 @@ class MonitoringScheduler:
                 stop()
 
     def reboot(self, ins_id: str) -> None:
-        client = self._clients[ins_id]
-        reboot = getattr(client, 'reboot', None)
-        if not reboot:
-            raise NotImplementedError(f"Reboot is not supported for {ins_id}")
-        reboot()
+        self._call(ins_id, 'reboot')
 
     def reboot_all(self) -> Dict[str, Dict[str, Any]]:
         results = {}
@@ -70,6 +66,19 @@ class MonitoringScheduler:
                 logger.error(f"Error on rebooting {ins_id}: {e}")
                 results[ins_id] = {'success': False, 'error': str(e)}
         return results
+
+    def start_data_logger(self, ins_id: str) -> None:
+        self._call(ins_id, 'start_data_logger')
+
+    def stop_data_logger(self, ins_id: str) -> None:
+        self._call(ins_id, 'stop_data_logger')
+
+    def _call(self, ins_id: str, method_name: str) -> None:
+        client = self._clients[ins_id]
+        method = getattr(client, method_name, None)
+        if not method:
+            raise NotImplementedError(f"{method_name} is not supported for {ins_id}")
+        method()
 
     def _monitor_loop(self):
 

@@ -20,11 +20,10 @@ def get_positions():
     memory_store = get_or_create_cache()
     return jsonify(memory_store.get_positions(last_minutes=5))
 
-@api_bp.route('/reboot/<ins_id>', methods=['POST'])
-def reboot(ins_id):
+def _dispatch(ins_id, action):
     monitor = current_app.config['MONITOR']
     try:
-        monitor.reboot(ins_id)
+        action(monitor, ins_id)
         return jsonify({'success': True})
     except KeyError:
         return jsonify({'success': False, 'error': f'Unknown device {ins_id}'}), 404
@@ -33,8 +32,20 @@ def reboot(ins_id):
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)}), 502
 
+@api_bp.route('/reboot/<ins_id>', methods=['POST'])
+def reboot(ins_id):
+    return _dispatch(ins_id, lambda monitor, ins_id: monitor.reboot(ins_id))
+
 @api_bp.route('/reboot', methods=['POST'])
 def reboot_all():
     monitor = current_app.config['MONITOR']
     results = monitor.reboot_all()
     return jsonify(results)
+
+@api_bp.route('/dataLogger/start/<ins_id>', methods=['POST'])
+def start_data_logger(ins_id):
+    return _dispatch(ins_id, lambda monitor, ins_id: monitor.start_data_logger(ins_id))
+
+@api_bp.route('/dataLogger/stop/<ins_id>', methods=['POST'])
+def stop_data_logger(ins_id):
+    return _dispatch(ins_id, lambda monitor, ins_id: monitor.stop_data_logger(ins_id))
