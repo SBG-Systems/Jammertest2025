@@ -48,6 +48,9 @@ class InsSerialClient:
     def fetch_data(self) -> Dict[str, Any]:
         return self._state.snapshot()
 
+    def reboot(self) -> None:
+        raise NotImplementedError("Reboot is not supported over a serial connection")
+
     def _run(self):
         while self._running:
             handle = None

@@ -301,6 +301,43 @@ class INSMonitor {
         }
     }
 
+    async rebootDevice(insId, insName) {
+        if (!confirm(`Reboot ${insName} now ?`)) {
+            return;
+        }
+
+        try {
+            const response = await fetch(`/api/reboot/${insId}`, { method: 'POST' });
+            const result = await response.json();
+            if (!response.ok || !result.success) {
+                throw new Error(result.error || `HTTP ${response.status}`);
+            }
+        } catch (error) {
+            console.error(`Error on rebooting ${insId}:`, error);
+            alert(`Failed to reboot ${insName}: ${error.message}`);
+        }
+    }
+
+    async rebootAll() {
+        if (!confirm('Reboot ALL devices now ?')) {
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/reboot', { method: 'POST' });
+            const results = await response.json();
+
+            const failures = Object.entries(results).filter(([, result]) => !result.success);
+            if (failures.length > 0) {
+                const details = failures.map(([insId, result]) => `${insId}: ${result.error}`).join('\n');
+                alert(`Some devices failed to reboot:\n${details}`);
+            }
+        } catch (error) {
+            console.error('Error on rebooting all devices:', error);
+            alert(`Failed to reboot all devices: ${error.message}`);
+        }
+    }
+
     updateElement(id, value) {
         const element = document.getElementById(id);
         if (element) {

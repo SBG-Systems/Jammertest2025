@@ -12,3 +12,6 @@ class FakeIns:
         with open(os.path.join(os.path.dirname(__file__), 'fake_data.json'), 'r') as f:
             return json.load(f)
         return {}
+
+    def reboot(self) -> None:
+        pass

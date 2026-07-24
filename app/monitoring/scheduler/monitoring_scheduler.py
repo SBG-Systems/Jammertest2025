@@ -1,7 +1,7 @@
 import threading
 import time
 import logging
-from typing import List
+from typing import Any, Dict, List
 
 from app.models.config import INSConfig
 from app.monitoring.collectors.ins_rest_api_client import InsRestApiClient
@@ -50,6 +50,26 @@ class MonitoringScheduler:
             stop = getattr(client, 'stop', None)
             if stop:
                 stop()
+
+    def reboot(self, ins_id: str) -> None:
+        client = self._clients[ins_id]
+        reboot = getattr(client, 'reboot', None)
+        if not reboot:
+            raise NotImplementedError(f"Reboot is not supported for {ins_id}")
+        reboot()
+
+    def reboot_all(self) -> Dict[str, Dict[str, Any]]:
+        results = {}
+        for ins_id, client in self._clients.items():
+            if not getattr(client, 'reboot', None):
+                continue
+            try:
+                self.reboot(ins_id)
+                results[ins_id] = {'success': True}
+            except Exception as e:
+                logger.error(f"Error on rebooting {ins_id}: {e}")
+                results[ins_id] = {'success': False, 'error': str(e)}
+        return results
 
     def _monitor_loop(self):
 

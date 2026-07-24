@@ -19,7 +19,7 @@ ins_configs = get_ins_configs('config.json')
 monitor = create_monitor(ins_configs=ins_configs)
 
 # Create flask app
-app = create_app(ins_configs=ins_configs)
+app = create_app(ins_configs=ins_configs, monitor=monitor)
 
 # Start everything
 if __name__ == '__main__':

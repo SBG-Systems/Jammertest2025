@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify
+from flask import Blueprint, current_app, jsonify
 
 from app.storage.cache_manager import get_or_create_cache
 
@@ -19,3 +19,22 @@ def get_data(ins_id):
 def get_positions():
     memory_store = get_or_create_cache()
     return jsonify(memory_store.get_positions(last_minutes=5))
+
+@api_bp.route('/reboot/<ins_id>', methods=['POST'])
+def reboot(ins_id):
+    monitor = current_app.config['MONITOR']
+    try:
+        monitor.reboot(ins_id)
+        return jsonify({'success': True})
+    except KeyError:
+        return jsonify({'success': False, 'error': f'Unknown device {ins_id}'}), 404
+    except NotImplementedError as e:
+        return jsonify({'success': False, 'error': str(e)}), 400
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 502
+
+@api_bp.route('/reboot', methods=['POST'])
+def reboot_all():
+    monitor = current_app.config['MONITOR']
+    results = monitor.reboot_all()
+    return jsonify(results)

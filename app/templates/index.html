@@ -15,6 +15,9 @@
     <div class="system-status" id="systemStatus">
         <span id="statusText">Initializing...</span>
     </div>
+    <div>
+        <button class="reboot-all-button" onclick="insMonitor.rebootAll()">🔁 Reboot All</button>
+    </div>
 </div>
 
 <div class="ins-container" id="insContainer">
@@ -71,6 +74,9 @@
                 </div>
             </div>
             <span class="status-indicator status-offline" id="status-{{ config.id }}"></span>
+            {% if config.connection_type == 'ethernet' %}
+            <button class="reboot-button" onclick="insMonitor.rebootDevice('{{ config.id }}', '{{ config.name }}')" title="Reboot this device">🔁</button>
+            {% endif %}
         </div>
 
         {% for n in range(1, 3) %}

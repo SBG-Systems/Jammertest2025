@@ -36,6 +36,11 @@ class InsRestApiClient:
             
         return ins_data
 
+    def reboot(self) -> None:
+        url = self._build_url("system/reboot")
+        response = requests.post(url, headers=self._DEFAULT_HEADERS, timeout=self._REQUEST_TIMEOUT_SECONDS)
+        response.raise_for_status()
+
     def _build_url(self, path: str) -> str:
         return f"{self._base_url}{self._API_PREFIX}/{path}"
 
