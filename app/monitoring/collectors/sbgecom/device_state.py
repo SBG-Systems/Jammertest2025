@@ -7,8 +7,8 @@ from typing import Any, Dict, Optional
 
 import numpy as np
 
-from src.logs.sbgecom_log_status import AIDING_GPS1_POS_RECV, AIDING_GPS2_POS_RECV
-from src.sbgecom_ids import SbgEComLogId
+from sbgecom.logs.sbgecom_log_status import AIDING_GPS1_POS_RECV, AIDING_GPS2_POS_RECV
+from sbgecom.sbgecom_ids import SbgEComLogId
 
 # time_stamp is packed as a uint32 (microseconds since sensor power up), so it
 # wraps around roughly every 71.6 minutes. Comparisons must happen in this

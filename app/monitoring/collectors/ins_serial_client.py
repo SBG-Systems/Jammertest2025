@@ -5,9 +5,9 @@ from typing import Any, Dict
 
 import serial
 
-from common.interfaces.sbg_interface_serial import SbgInterfaceSerial
-from src.sbgecom import SbgEComHandle
-from src.sbgecom_ids import SbgEComClass
+from sbgecom.common.interfaces.sbg_interface_serial import SbgInterfaceSerial
+from sbgecom import SbgEComHandle
+from sbgecom.sbgecom_ids import SbgEComClass
 
 from app.monitoring.collectors.sbgecom.device_state import SbgEComDeviceState
 
