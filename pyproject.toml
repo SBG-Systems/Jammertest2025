@@ -1,0 +1,18 @@
+[project]
+name = "sbg-ins-monitoring"
+version = "0.1.0"
+description = "SBG Systems - INS Monitoring system"
+authors = [
+    { name = "SBG Systems" }
+]
+license = "MIT"
+readme = "README.md"
+requires-python = ">=3.12,<4.0"
+dependencies = ["flask (<4.0.0)", "requests (<3.0.0)", "numpy (<3.0.0)", "pysbgecom (>=6.0,<6.1.0)"]
+
+[tool.poetry]
+package-mode = false
+
+[build-system]
+requires = ["poetry-core>=2.0.0"]
+build-backend = "poetry.core.masonry.api"

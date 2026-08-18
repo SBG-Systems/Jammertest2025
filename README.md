@@ -4,18 +4,11 @@ Quick'n'Dirty Dashboard created fo follow INS data during Jammertest 2025
 
 ## Install
 
-Ensure to have python installed and available in path.
+Ensure to have python and [Poetry](https://python-poetry.org/docs/#installation) installed and available in path.
 
 ```sh
-# Create virtual env
-python -m venv venv
-
-# Enter virtual env
-(windows) .\venv\Scripts\activate
-(linux)   source venv/bin/activate
-
-# Install dependencies
-pip install -r requirements.txt
+# Install dependencies (creates the virtual env automatically)
+poetry install
 ```
 
 
@@ -38,12 +31,7 @@ Ensure each `id` field is unique upon all configured INS.
 ## Run
 
 ```sh
-# Enter virtual env (if not already in)
-(windows) .\venv\Scripts\activate
-(linux)   source venv/bin/activate
-
-# Install dependencies
-python app.py
+poetry run python app.py
 ```
 
 Go to [http://127.0.0.1:5000/](http://127.0.0.1:5000/)
