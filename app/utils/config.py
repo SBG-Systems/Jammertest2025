@@ -21,6 +21,15 @@ def get_ins_configs(json_path: str) -> List[INSConfig]:
                     connection_type=config_json_data["connection_type"],
                     ip_address=config_json_data["ip_address"]
                 ))
+            elif config_json_data["connection_type"] == 'serial':
+                ins_configs.append(INSConfig(
+                    id=config_json_data["id"],
+                    name=config_json_data["name"],
+                    color=config_json_data.get("color", next(color_cycle)),
+                    connection_type=config_json_data["connection_type"],
+                    serial_port=config_json_data["serial_port"],
+                    serial_baudrate=config_json_data.get("serial_baudrate", 115200)
+                ))
             elif config_json_data["connection_type"] == 'fake':
                 ins_configs.append(INSConfig(
                     id=config_json_data["id"],

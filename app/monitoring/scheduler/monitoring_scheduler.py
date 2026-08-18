@@ -1,13 +1,14 @@
 import threading
 import time
 import logging
-
-from app.monitoring.collectors.ins_rest_api_client import InsRestApiClient
-from app.monitoring.collectors.fake import FakeIns
-from app.storage.cache_manager import get_or_create_cache
 from typing import List
 
 from app.models.config import INSConfig
+from app.monitoring.collectors.ins_rest_api_client import InsRestApiClient
+from app.monitoring.collectors.ins_serial_client import InsSerialClient
+from app.monitoring.collectors.fake import FakeIns
+from app.storage.cache_manager import get_or_create_cache
+
 
 logger = logging.getLogger(__name__)
 
@@ -22,12 +23,19 @@ class MonitoringScheduler:
         for ins_config in ins_configs:
             if ins_config.connection_type == 'ethernet':
                 self._clients[ins_config.id] = InsRestApiClient(ins_config.ip_address)
+            elif ins_config.connection_type == 'serial':
+                self._clients[ins_config.id] = InsSerialClient(ins_config.serial_port, ins_config.serial_baudrate)
             elif ins_config.connection_type == 'fake':
                 self._clients[ins_config.id] = FakeIns()
 
     def start(self):
         if self._running:
             return
+
+        for client in self._clients.values():
+            start = getattr(client, 'start', None)
+            if start:
+                start()
 
         self._running = True
         self._monitor_thread = threading.Thread(target=self._monitor_loop, daemon=True)
@@ -37,6 +45,11 @@ class MonitoringScheduler:
         self._running = False
         if self._monitor_thread:
             self._monitor_thread.join(timeout=10)
+
+        for client in self._clients.values():
+            stop = getattr(client, 'stop', None)
+            if stop:
+                stop()
 
     def _monitor_loop(self):
 

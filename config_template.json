@@ -6,9 +6,16 @@
         "ip_address": "1.2.3.4"
     },
     {
-        "id": "ins_002", 
+        "id": "ins_002",
         "name": "NAVSIGHT-S-RU",
         "connection_type": "ethernet",
         "ip_address": "1.2.4.5"
+    },
+    {
+        "id": "ins_003",
+        "name": "ELLIPSE-D",
+        "connection_type": "serial",
+        "serial_port": "COM3",
+        "serial_baudrate": 115200
     }
 ]

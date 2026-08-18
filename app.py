@@ -25,6 +25,6 @@ app = create_app(ins_configs=ins_configs)
 if __name__ == '__main__':
     try:
         monitor.start()
-        app.run(debug=True, host='0.0.0.0', port=5000)
+        app.run(debug=True, host='0.0.0.0', port=5000, use_reloader=False)
     finally:
         monitor.stop()
