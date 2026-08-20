@@ -5,6 +5,11 @@ from typing import Any, Dict
 
 import serial
 
+try:
+    from gpiozero import OutputDevice
+except ImportError:
+    OutputDevice = None
+
 from sbgecom.common.interfaces.sbg_interface_serial import SbgInterfaceSerial
 from sbgecom import SbgEComHandle
 from sbgecom.sbgecom_ids import SbgEComClass
@@ -26,12 +31,19 @@ class InsSerialClient:
     _RECONNECT_DELAY_SECONDS = 2.0
     _IDLE_SLEEP_SECONDS = 0.001
 
-    def __init__(self, port: str, baudrate: int = 115200):
+    def __init__(self, port: str, baudrate: int = 115200, relay_gpio_pin: int = None):
         self._port = port
         self._baudrate = baudrate
         self._state = SbgEComDeviceState()
         self._running = False
         self._thread = None
+        self._relay = None
+
+        if relay_gpio_pin is not None:
+            if OutputDevice is None:
+                logger.error("gpiozero is not available, cannot control power relay")
+            else:
+                self._relay = OutputDevice(relay_gpio_pin)
 
     def start(self):
         if self._running:
@@ -40,16 +52,28 @@ class InsSerialClient:
         self._thread = threading.Thread(target=self._run, daemon=True)
         self._thread.start()
 
+        if self._relay:
+            logger.info(f"Powering on INS via GPIO pin {self._relay.pin}")
+            self._relay.on()
+
     def stop(self):
         self._running = False
         if self._thread:
             self._thread.join(timeout=5)
 
+        if self._relay:
+            logger.info(f"Powering off INS via GPIO pin {self._relay.pin}")
+            self._relay.off()
+
     def fetch_data(self) -> Dict[str, Any]:
         return self._state.snapshot()
 
     def reboot(self) -> None:
-        raise NotImplementedError("Reboot is not supported over a serial connection")
+        if self._relay:
+            logger.info(f"Rebooting INS via GPIO pin {self._relay.pin}")
+            self._relay.off()
+            time.sleep(1)
+            self._relay.on()
 
     def start_data_logger(self) -> None:
         raise NotImplementedError("Data logger control is not supported over a serial connection")

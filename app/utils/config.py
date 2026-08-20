@@ -29,6 +29,7 @@ def get_ins_configs(json_path: str) -> List[INSConfig]:
                     connection_type=config_json_data["connection_type"],
                     serial_port=config_json_data["serial_port"],
                     serial_baudrate=config_json_data.get("serial_baudrate", 115200)
+                    power_relay_gpio_pin=config_json_data.get("power_relay_gpio_pin", None)
                 ))
             elif config_json_data["connection_type"] == 'fake':
                 ins_configs.append(INSConfig(

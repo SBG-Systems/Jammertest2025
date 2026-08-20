@@ -13,3 +13,4 @@ class INSConfig:
     serial_port: Optional[str] = None
     serial_baudrate: int = 115200
     timeout: float = 5.0
+    power_relay_gpio_pin: Optional[int] = None
