@@ -3,4 +3,8 @@ venv/
 config.json
 __pycache__/
 .idea/
-vendor/
+/vendor/
+tools/data/
+app/static/vendor/
+app/static/fonts/
+app/static/sprites/

@@ -14,3 +14,11 @@ class INSConfig:
     serial_baudrate: int = 115200
     timeout: float = 5.0
     power_relay_gpio_pin: Optional[int] = None
+
+
+@dataclass
+class MapConfig:
+    source: str
+    mbtiles_path: Optional[str] = None
+    tile_url: Optional[str] = None
+    max_zoom: int = 19

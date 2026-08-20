@@ -646,13 +646,6 @@ body {
     margin-bottom: 2px;
 }
 
-.current-position-marker {
-    background: transparent;
-    border: none;
-    text-align: center;
-    line-height: 20px;
-}
-
 .map-visible-toggle {
     background: none;
     border: 1px solid #dee2e6;
