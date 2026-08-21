@@ -44,6 +44,8 @@ def _to_jsonable(value: Any) -> Any:
         return {k: _to_jsonable(v) for k, v in value.items()}
     if isinstance(value, (list, tuple)):
         return [_to_jsonable(v) for v in value]
+    if isinstance(value, bytearray):
+        return ""
     return value
 
 
