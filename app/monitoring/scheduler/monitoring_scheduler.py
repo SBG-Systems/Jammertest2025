@@ -24,7 +24,7 @@ class MonitoringScheduler:
             if ins_config.connection_type == 'ethernet':
                 self._clients[ins_config.id] = InsRestApiClient(ins_config.ip_address)
             elif ins_config.connection_type == 'serial':
-                self._clients[ins_config.id] = InsSerialClient(ins_config.serial_port, ins_config.serial_baudrate)
+                self._clients[ins_config.id] = InsSerialClient(ins_config.serial_port, ins_config.serial_baudrate, ins_config.power_relay_gpio_pin)
             elif ins_config.connection_type == 'fake':
                 self._clients[ins_config.id] = FakeIns()
 
